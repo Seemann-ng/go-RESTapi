@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/BurntSushi/toml"
 	"log"
+
+	"github.com/BurntSushi/toml"
 
 	"github.com/Seemann-ng/go-RESTapi/internal/app/apiserver"
 )
@@ -17,7 +18,7 @@ func init() {
 		&configPath,
 		"config-path",
 		"configs/apiserver.toml",
-		"config path",
+		"path to config file",
 	)
 }
 

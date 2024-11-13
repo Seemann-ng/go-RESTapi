@@ -1,1 +1,5 @@
-bind_addr = ":8080"
+bind_addr = ":8181"
+log_level = "debug"
+
+[store]
+database_url = "Some pgsql url here :)"
