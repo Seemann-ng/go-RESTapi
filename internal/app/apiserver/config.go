@@ -1,6 +1,8 @@
 package apiserver
 
-import "github.com/Seemann-ng/go-RESTapi/internal/app/store"
+import (
+	"github.com/Seemann-ng/go-RESTapi/internal/app/store"
+)
 
 // Config ...
 type Config struct {

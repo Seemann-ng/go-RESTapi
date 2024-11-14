@@ -1,12 +1,13 @@
 package apiserver
 
 import (
-	"github.com/Seemann-ng/go-RESTapi/internal/app/store"
 	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
+
+	"github.com/Seemann-ng/go-RESTapi/internal/app/store"
 )
 
 // APIServer ...
@@ -40,7 +41,7 @@ func (s *APIServer) configureLogger() error {
 
 // configureRouter ...
 func (s *APIServer) configureRouter() {
-	s.router.HandleFunc("/hello", s.handleHello())
+	s.router.HandleFunc("/hello", s.HandleHello())
 }
 
 // configureStore ...
@@ -49,13 +50,14 @@ func (s *APIServer) configureStore() error {
 	if err := st.Open(); err != nil {
 		return err
 	}
+
 	s.store = st
 
 	return nil
 }
 
-// handleHello ...
-func (s *APIServer) handleHello() http.HandlerFunc {
+// HandleHello ...
+func (s *APIServer) HandleHello() http.HandlerFunc {
 	// ...
 	/* type request struct {
 		Name string
