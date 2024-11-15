@@ -8,15 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/Seemann-ng/go-RESTapi/internal/app/apiserver"
+	"github.com/Seemann-ng/go-RESTapi/internal/app/store/teststore"
 )
 
-func TestAPIServer_HandleHello(t *testing.T) {
-	s := apiserver.New(apiserver.NewConfig())
+func TestServer_HandleUsersCreate(t *testing.T) {
 	rec := httptest.NewRecorder()
-	req, _ := http.NewRequest(http.MethodGet, "/hello", nil)
-
-	s.HandleHello().ServeHTTP(rec, req)
+	req, _ := http.NewRequest(http.MethodPost, "/users", nil)
+	s := apiserver.NewServer(teststore.New())
+	s.ServeHTTP(rec, req)
 
 	assert.Equal(t, http.StatusOK, rec.Code)
-	assert.Equal(t, "Hello World", rec.Body.String())
 }
