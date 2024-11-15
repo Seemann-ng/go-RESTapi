@@ -5,9 +5,9 @@ import (
 )
 
 // requiredIf ...
-func requiredIf(cond bool) validation.RuleFunc {
+func requiredIf(condition bool) validation.RuleFunc {
 	return func(value interface{}) error {
-		if cond {
+		if condition {
 			return validation.Validate(value, validation.Required)
 		}
 

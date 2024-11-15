@@ -19,15 +19,15 @@ func New() *Store {
 
 // User ...
 // store.User().Create()
-func (s *Store) User() store.UserRepository {
-	if s.userRepository != nil {
-		return s.userRepository
+func (store *Store) User() store.UserRepository {
+	if store.userRepository != nil {
+		return store.userRepository
 	}
 
-	s.userRepository = &UserRepository{
-		store: s,
+	store.userRepository = &UserRepository{
+		store: store,
 		users: make(map[string]*model.User),
 	}
 
-	return s.userRepository
+	return store.userRepository
 }

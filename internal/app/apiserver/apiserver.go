@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/sessions"
+
 	"github.com/Seemann-ng/go-RESTapi/internal/app/store/sqlstore"
 )
 
@@ -22,10 +24,11 @@ func Start(config *Config) error {
 		}
 	}()
 
-	store := sqlstore.New(db)
-	srv := NewServer(store)
+	storage := sqlstore.New(db)
+	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
+	server := NewServer(storage, sessionStore)
 
-	return http.ListenAndServe(config.BindAddr, srv)
+	return http.ListenAndServe(config.BindAddr, server)
 }
 
 // newDB ...

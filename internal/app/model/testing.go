@@ -5,7 +5,7 @@ import (
 )
 
 // TestUser ...
-func TestUser(t *testing.T) *User {
+func TestUser(test *testing.T) *User {
 	return &User{
 		Email:    "user@example.org",
 		Password: "password",

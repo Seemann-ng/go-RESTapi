@@ -10,29 +10,29 @@ import (
 	"github.com/Seemann-ng/go-RESTapi/internal/app/store/teststore"
 )
 
-func TestUserRepository_Create(t *testing.T) {
-	s := teststore.New()
-	u := model.TestUser(t)
+func TestUserRepository_Create(test *testing.T) {
+	testStorage := teststore.New()
+	user := model.TestUser(test)
 
-	assert.NoError(t, s.User().Create(u))
-	assert.NotNil(t, u)
+	assert.NoError(test, testStorage.User().Create(user))
+	assert.NotNil(test, user)
 }
 
-func TestUserRepository_FindByEmail(t *testing.T) {
-	s := teststore.New()
+func TestUserRepository_FindByEmail(test *testing.T) {
+	testStorage := teststore.New()
 	email := "user@example.com"
-	_, err := s.User().FindByEmail(email)
+	_, err := testStorage.User().FindByEmail(email)
 
-	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
+	assert.EqualError(test, err, store.ErrRecordNotFound.Error())
 
-	u := model.TestUser(t)
-	u.Email = email
-	if err = s.User().Create(u); err != nil {
-		t.Fatal(err)
+	testUser := model.TestUser(test)
+	testUser.Email = email
+	if err = testStorage.User().Create(testUser); err != nil {
+		test.Fatal(err)
 	}
 
-	u, err = s.User().FindByEmail(email)
+	testUser, err = testStorage.User().FindByEmail(email)
 
-	assert.NoError(t, err)
-	assert.NotNil(t, u)
+	assert.NoError(test, err)
+	assert.NotNil(test, testUser)
 }

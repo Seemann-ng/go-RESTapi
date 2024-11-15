@@ -12,27 +12,27 @@ type UserRepository struct {
 }
 
 // Create ...
-func (r *UserRepository) Create(u *model.User) error {
-	if err := u.Validate(); err != nil {
+func (repo *UserRepository) Create(user *model.User) error {
+	if err := user.Validate(); err != nil {
 		return err
 	}
 
-	if err := u.BeforeCreate(); err != nil {
+	if err := user.BeforeCreate(); err != nil {
 		return err
 	}
 
-	r.users[u.Email] = u
-	u.ID = len(r.users)
+	repo.users[user.Email] = user
+	user.ID = len(repo.users)
 
 	return nil
 }
 
 // FindByEmail ...
-func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
-	u, ok := r.users[email]
+func (repo *UserRepository) FindByEmail(email string) (*model.User, error) {
+	user, ok := repo.users[email]
 	if !ok {
 		return nil, store.ErrRecordNotFound
 	}
 
-	return u, nil
+	return user, nil
 }

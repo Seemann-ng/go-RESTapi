@@ -8,7 +8,7 @@ import (
 	"github.com/Seemann-ng/go-RESTapi/internal/app/model"
 )
 
-func TestUser_Validate(t *testing.T) {
+func TestUser_Validate(test *testing.T) {
 	testCases := []struct {
 		name    string
 		user    func() *model.User
@@ -17,14 +17,14 @@ func TestUser_Validate(t *testing.T) {
 		{
 			name: "valid",
 			user: func() *model.User {
-				return model.TestUser(t)
+				return model.TestUser(test)
 			},
 			isValid: true,
 		},
 		{
 			name: "no email",
 			user: func() *model.User {
-				user := model.TestUser(t)
+				user := model.TestUser(test)
 				user.Email = ""
 
 				return user
@@ -34,7 +34,7 @@ func TestUser_Validate(t *testing.T) {
 		{
 			name: "invalid email",
 			user: func() *model.User {
-				user := model.TestUser(t)
+				user := model.TestUser(test)
 				user.Email = "invalid"
 
 				return user
@@ -44,7 +44,7 @@ func TestUser_Validate(t *testing.T) {
 		{
 			name: "empty password",
 			user: func() *model.User {
-				user := model.TestUser(t)
+				user := model.TestUser(test)
 				user.Password = ""
 
 				return user
@@ -54,7 +54,7 @@ func TestUser_Validate(t *testing.T) {
 		{
 			name: "short password",
 			user: func() *model.User {
-				user := model.TestUser(t)
+				user := model.TestUser(test)
 				user.Password = "abc"
 
 				return user
@@ -64,7 +64,7 @@ func TestUser_Validate(t *testing.T) {
 		{
 			name: "no password with encrypted password",
 			user: func() *model.User {
-				user := model.TestUser(t)
+				user := model.TestUser(test)
 				user.Password = ""
 				user.EncryptedPassword = "encryptedPassword"
 
@@ -74,20 +74,20 @@ func TestUser_Validate(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			if tc.isValid {
-				assert.NoError(t, tc.user().Validate())
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			if testCase.isValid {
+				assert.NoError(test, testCase.user().Validate())
 			} else {
-				assert.Error(t, tc.user().Validate())
+				assert.Error(test, testCase.user().Validate())
 			}
 		})
 	}
 }
 
-func TestUser_BeforeCreate(t *testing.T) {
-	u := model.TestUser(t)
+func TestUser_BeforeCreate(test *testing.T) {
+	testUser := model.TestUser(test)
 
-	assert.NoError(t, u.BeforeCreate())
-	assert.NotEmpty(t, u.EncryptedPassword)
+	assert.NoError(test, testUser.BeforeCreate())
+	assert.NotEmpty(test, testUser.EncryptedPassword)
 }

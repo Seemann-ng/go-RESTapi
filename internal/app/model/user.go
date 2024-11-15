@@ -8,49 +8,59 @@ import (
 
 // User ...
 type User struct {
-	ID                int
-	Email             string
-	Password          string
-	EncryptedPassword string
+	ID                int    `json:"id"`
+	Email             string `json:"email"`
+	Password          string `json:"password,omitempty"`
+	EncryptedPassword string `json:"-"`
 }
 
 // Validate ...
-func (u *User) Validate() error {
+func (user *User) Validate() error {
 	return validation.ValidateStruct(
-		u,
+		user,
 		validation.Field(
-			&u.Email,
+			&user.Email,
 			validation.Required,
 			is.Email,
 		),
 		validation.Field(
-			&u.Password,
-			validation.By(requiredIf(u.EncryptedPassword == "")),
+			&user.Password,
+			validation.By(requiredIf(user.EncryptedPassword == "")),
 			validation.Length(6, 30),
 		),
 	)
 }
 
 // BeforeCreate ...
-func (u *User) BeforeCreate() error {
-	if len(u.Password) > 0 {
-		enc, err := encryptString(u.Password)
+func (user *User) BeforeCreate() error {
+	if len(user.Password) > 0 {
+		enc, err := encryptString(user.Password)
 		if err != nil {
 			return err
 		}
 
-		u.EncryptedPassword = enc
+		user.EncryptedPassword = enc
 	}
 
 	return nil
 }
 
+// Sanitize ...
+func (user *User) Sanitize() {
+	user.Password = ""
+}
+
+// ComparePassword ...
+func (user *User) ComparePassword(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(password)) == nil
+}
+
 // encryptString ...
-func encryptString(s string) (string, error) {
-	b, err := bcrypt.GenerateFromPassword([]byte(s), bcrypt.MinCost)
+func encryptString(str string) (string, error) {
+	arr, err := bcrypt.GenerateFromPassword([]byte(str), bcrypt.MinCost)
 	if err != nil {
 		return "", err
 	}
 
-	return string(b), nil
+	return string(arr), nil
 }

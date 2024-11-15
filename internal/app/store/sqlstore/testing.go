@@ -8,16 +8,16 @@ import (
 )
 
 // TestDB ...
-func TestDB(t *testing.T, databaseURL string) (*sql.DB, func(...string)) {
-	t.Helper()
+func TestDB(test *testing.T, databaseURL string) (*sql.DB, func(...string)) {
+	test.Helper()
 
 	db, err := sql.Open("postgres", databaseURL)
 	if err != nil {
-		t.Fatal(err)
+		test.Fatal(err)
 	}
 
 	if err := db.Ping(); err != nil {
-		t.Fatal(err)
+		test.Fatal(err)
 	}
 
 	return db, func(tables ...string) {
@@ -25,12 +25,12 @@ func TestDB(t *testing.T, databaseURL string) (*sql.DB, func(...string)) {
 			if _, err := db.Exec(
 				fmt.Sprintf("TRUNCATE %s CASCADE", strings.Join(tables, ", ")),
 			); err != nil {
-				t.Fatal(err)
+				test.Fatal(err)
 			}
 		}
 
 		if err := db.Close(); err != nil {
-			t.Fatal(err)
+			test.Fatal(err)
 		}
 	}
 }

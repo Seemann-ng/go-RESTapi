@@ -23,14 +23,14 @@ func New(db *sql.DB) *Store {
 
 // User ...
 // store.User().Create()
-func (s *Store) User() store.UserRepository {
-	if s.userRepository != nil {
-		return s.userRepository
+func (storage *Store) User() store.UserRepository {
+	if storage.userRepository != nil {
+		return storage.userRepository
 	}
 
-	s.userRepository = &UserRepository{
-		store: s,
+	storage.userRepository = &UserRepository{
+		store: storage,
 	}
 
-	return s.userRepository
+	return storage.userRepository
 }

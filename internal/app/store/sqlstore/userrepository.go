@@ -13,20 +13,20 @@ type UserRepository struct {
 }
 
 // Create ...
-func (r *UserRepository) Create(u *model.User) error {
-	if err := u.Validate(); err != nil {
+func (repository *UserRepository) Create(user *model.User) error {
+	if err := user.Validate(); err != nil {
 		return err
 	}
 
-	if err := u.BeforeCreate(); err != nil {
+	if err := user.BeforeCreate(); err != nil {
 		return err
 	}
 
-	if err := r.store.db.QueryRow(
+	if err := repository.store.db.QueryRow(
 		"INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id",
-		u.Email,
-		u.EncryptedPassword,
-	).Scan(&u.ID); err != nil {
+		user.Email,
+		user.EncryptedPassword,
+	).Scan(&user.ID); err != nil {
 		return err
 	}
 
@@ -34,15 +34,15 @@ func (r *UserRepository) Create(u *model.User) error {
 }
 
 // FindByEmail ...
-func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
-	u := &model.User{}
-	if err := r.store.db.QueryRow(
+func (repository *UserRepository) FindByEmail(email string) (*model.User, error) {
+	user := &model.User{}
+	if err := repository.store.db.QueryRow(
 		"SELECT id, email, encrypted_password FROM users WHERE email = $1",
 		email,
 	).Scan(
-		&u.ID,
-		&u.Email,
-		&u.EncryptedPassword,
+		&user.ID,
+		&user.Email,
+		&user.EncryptedPassword,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, store.ErrRecordNotFound
@@ -51,5 +51,5 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 		return nil, err
 	}
 
-	return u, nil
+	return user, nil
 }
